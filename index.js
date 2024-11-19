@@ -122,7 +122,7 @@ app.post("/send-mail", async (req, res) => {
             <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border: 1px solid #dddddd; padding: 20px; border-radius: 8px; text-align: center;">
               
               <!-- Logo de la empresa -->
-              <img src="https://firebasestorage.googleapis.com/v0/b/pruebaapp-b4da6.appspot.com/o/photos%2FGroup%2022.png?alt=media&token=773fdd95-b818-4126-88a4-81b30c5cdfce" alt="Logo Sabor Académico" style="width: 100px; margin-bottom: 20px;">
+              <img src="https://firebasestorage.googleapis.com/v0/b/pruebaapp-b4da6.appspot.com/o/photos%2Fimage.png?alt=media&token=f8b7459b-47fa-4c72-ba69-a238b4411de0" alt="Logo Restaurante Buenardo" style="width: 100px; margin-bottom: 20px;">
 
               <h1 style="color: ${aceptacion ? '#4CAF50' : '#FFA726'};">
                 ${aceptacion ? "¡Felicitaciones!" : "¡Cuenta creada!"} ${nombreUsuario}
