@@ -5,6 +5,7 @@ const nodemailer = require("nodemailer");
 const dotenv = require("dotenv");
 const fs = require("fs");
 const cors = require("cors");  // Importa cors
+const { log } = require("console");
 
 dotenv.config();
 
@@ -51,28 +52,30 @@ app.post("/notify", async (req, res) => {
 });
 
 // Endpoint para enviar notificación a todos los empleados de un rol
-app.post("/notify-role", async (req, res) => {
-  const { title, body, role } = req.body;
+app.post("/notify-mozo", async (req, res) => {
+  const { title, body, tokens } = req.body; // Ahora recibe un array de tokens directamente.
 
   try {
-    const employeeTokens = [];
-    const querySnapshot = await db
-      .collection("usuarios")
-      .where("rol", "==", role)
-      .get();
-    querySnapshot.forEach((doc) => {
-      const data = doc.data();
-      if (data.token) {
-        employeeTokens.push(data.token);
-      }
-    });
+    // Verifica si se recibió un array de tokens válido.
+    if (!Array.isArray(tokens) || tokens.length === 0) {
+      return res
+        .status(400)
+        .send("Debe proporcionar un array de tokens válido.");
+    }
 
+    // Asigna directamente los tokens recibidos al array.
+    const employeeTokens = tokens;
+
+    console.log("tokens recibidos:", employeeTokens);
+
+    // Valida si hay tokens disponibles para enviar mensajes.
     if (employeeTokens.length === 0) {
       return res
         .status(404)
         .send("No hay usuarios a los que enviar un mensaje");
     }
 
+    // Prepara el mensaje para enviar las notificaciones.
     const message = {
       notification: {
         title: title,
@@ -81,12 +84,14 @@ app.post("/notify-role", async (req, res) => {
       tokens: employeeTokens,
     };
 
+    // Envía las notificaciones.
     const response = await admin.messaging().sendEachForMulticast(message);
     res.status(200).send(`Mensajes enviados: ${response.successCount}`);
   } catch (error) {
     res.status(500).send(`Error al enviar mensaje: ${error}`);
   }
 });
+
 
 
 // Endpoint para enviar un mail a usuario aceptado o pendiente
@@ -215,5 +220,6 @@ app.post("/reject-mail", async (req, res) => {
 
 
 app.listen(PORT, () => {
+    
   console.log(`Server running on port ${PORT}`);
 });
